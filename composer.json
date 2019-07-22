@@ -1,0 +1,47 @@
+{
+    "name": "fostercommerce/appsearch",
+    "description": "Add AppSearch to your site.",
+    "type": "craft-plugin",
+    "version": "0.1.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "appsearch"
+    ],
+    "support": {
+        "docs": "https://github.com/fostercommerce/appsearch/blob/master/README.md",
+        "issues": "https://github.com/fostercommerce/appsearch/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Foster Commerce",
+            "homepage": "https://fostercommerce.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.1",
+        "league/fractal": "^0.18.0",
+        "elastic/app-search-php": "^1.0"
+    },
+    "repositories": [
+      {
+        "type": "path",
+        "url": "/home/tyrone/code/misc/app-search-php"
+      }
+    ],
+
+    "autoload": {
+        "psr-4": {
+          "fostercommerce\\appsearch\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "AppSearch",
+        "handle": "appsearch",
+        "changelogUrl": "https://raw.githubusercontent.com/fostercommerce/appsearch/master/CHANGELOG.md",
+        "class": "fostercommerce\\appsearch\\Plugin"
+    }
+}
