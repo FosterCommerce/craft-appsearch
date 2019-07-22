@@ -26,13 +26,6 @@
         "league/fractal": "^0.18.0",
         "elastic/app-search-php": "^1.0"
     },
-    "repositories": [
-      {
-        "type": "path",
-        "url": "/home/tyrone/code/misc/app-search-php"
-      }
-    ],
-
     "autoload": {
         "psr-4": {
           "fostercommerce\\appsearch\\": "src/"
