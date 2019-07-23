@@ -15,6 +15,7 @@
 use craft\elements\Entry;
 
 return [
+    'sync' => true,
     'apiEndpoint' => 'https://host-xxx.api.swiftype.com',
     'publicSearchKey' => 'search-xxx',
     'privateApiKey' => 'private-xxx',
