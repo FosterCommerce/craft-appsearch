@@ -12,6 +12,7 @@
  * well, so you can have different settings groups for each environment, just as
  * you do for 'general.php'
  */
+use craft\elements\Entry;
 
 return [
     'apiEndpoint' => 'https://host-xxx.api.swiftype.com',
