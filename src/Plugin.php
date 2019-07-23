@@ -1,7 +1,7 @@
 <?php
 namespace fostercommerce\appsearch;
 
-use fostercommerce\appsearch\services\AppsearchService as AppsearchServiceService;
+use fostercommerce\appsearch\services\AppsearchService;
 use fostercommerce\appsearch\variables\AppsearchVariable;
 use fostercommerce\appsearch\models\Settings;
 
@@ -25,6 +25,11 @@ class Plugin extends BasePlugin
     public function init()
     {
         parent::init();
+
+        $this->setComponents([
+            'appsearchService' => AppsearchService::class,
+        ]);
+
         self::$instance = $this;
 
         if (Craft::$app instanceof ConsoleApplication) {
@@ -61,9 +66,6 @@ class Plugin extends BasePlugin
             }
         );
 
-        /*
-         * Delete an element from the index
-         */
         Event::on(
             Element::class,
             Element::EVENT_BEFORE_DELETE,
