@@ -13,6 +13,10 @@
  * you do for 'general.php'
  */
 use craft\elements\Entry;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Manager;
+use fostercommerce\appsearch\ElementSerializer;
+use fostercommerce\appsearch\TransformHandler;
 
 return [
     'sync' => true,
@@ -24,6 +28,7 @@ return [
             'engine' => 'example-engine',
             'elementType' => Entry::class,
             'criteria' => ['section' => 'posts'],
+            'handler' => TransformHandler::class,
             'transformer' => function(Entry $entry) {
                 return [
                     'title' => $entry->title,

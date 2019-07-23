@@ -8,6 +8,7 @@ use craft\base\Model;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\Entry;
 use fostercommerce\appsearch\ElementTransformer;
+use fostercommerce\appsearch\TransformHandler;
 
 class EngineMapping extends Model
 {
@@ -16,6 +17,8 @@ class EngineMapping extends Model
     public $elementType;
 
     public $criteria;
+
+    public $handler = TransformHandler::class;
 
     public $transformer = ElementTransformer::class;
 
@@ -39,6 +42,14 @@ class EngineMapping extends Model
         }
 
         return $this->getElementQuery($element)->count() === 0 || $this->getElementQuery($element)->status(null)->count() > 0;
+    }
+
+    public function getTransformHandler()
+    {
+        if (is_callable($this->handler)) {
+            return $this->handler;
+        }
+        return Craft::createObject($this->handler);
     }
 
     public function getTransformer()

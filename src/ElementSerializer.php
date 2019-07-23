@@ -5,7 +5,7 @@ use League\Fractal\Serializer\ArraySerializer;
 
 class ElementSerializer extends ArraySerializer
 {
-    function toSnakeCase($key) {
+    protected function toSnakeCase($key) {
         $key[0] = strtolower($key[0]);
 
         $next = function ($key) {
@@ -16,7 +16,6 @@ class ElementSerializer extends ArraySerializer
 
     public function item($resourceKey, array $data)
     {
-
         $serialized = [];
 
         foreach ($data as $key => $value) {

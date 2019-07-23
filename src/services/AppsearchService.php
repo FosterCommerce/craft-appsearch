@@ -9,9 +9,6 @@ use fostercommerce\appsearch\models\EngineMapping;
 use fostercommerce\appsearch\jobs\IndexDocuments;
 use fostercommerce\appsearch\jobs\DeleteDocuments;
 use fostercommerce\appsearch\ElementSerializer;
-use League\Fractal\Manager;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
 use Elastic\AppSearch\Client\ClientBuilder;
 
 class AppsearchService extends Component
@@ -55,7 +52,7 @@ class AppsearchService extends Component
 
     public function indexElementsForMapping($mapping, $elements)
     {
-        $toIndex = [];
+        $toIndex = null;
         $toDelete = [];
         foreach ($elements as $element) {
             // Add support for 3.2 drafts and revisions
@@ -67,20 +64,22 @@ class AppsearchService extends Component
 
             if ($mapping->elementType === get_class($element)) {
                 if ($mapping->canIndexElement($element)) {
-                    $toIndex[] = $this->transformElement($mapping, $element);
+                    $toIndex = array_merge($toIndex ?: [], $this->transformElement($mapping, $element));
                 } elseif ($mapping->canDeleteElement($element)) {
                     $toDelete[] = "{$element->siteId}_{$element->id}";
                 }
             }
         }
 
-        $indexGroups = array_chunk($toIndex, 100);
-        foreach ($indexGroups as $group) {
-            $job = new IndexDocuments([
-                'engine' => $mapping->engine,
-                'documents' => $group,
-            ]);
-            Craft::$app->queue->push($job);
+        if ($toIndex) {
+            $indexGroups = array_chunk($toIndex, 100);
+            foreach ($indexGroups as $group) {
+                $job = new IndexDocuments([
+                    'engine' => $mapping->engine,
+                    'documents' => $group,
+                ]);
+                Craft::$app->queue->push($job);
+            }
         }
 
         if (count($toDelete) > 0) {
@@ -119,22 +118,29 @@ class AppsearchService extends Component
         }
     }
 
-    protected function transformElement(EngineMapping $mapping, $element)
-    {
-        $transformer = $mapping->getTransformer();
-        $resource = new Item($element, $transformer);
-
-        $fractal = new Manager();
-        $fractal->setSerializer(new ElementSerializer());
-
-        $data = $fractal->createData($resource)->toArray();
-
-        // If an empty array is returned, skip element
-        if (empty($data)) {
-            return;
+    private function isAssociativeArray($arr) {
+        if (array() === $arr) {
+            return false;
         }
 
-        $data['id'] = "{$element->siteId}_{$element->id}";
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    protected function transformElement(EngineMapping $mapping, $element)
+    {
+        $handler = $mapping->getTransformHandler();
+
+        if (is_callable($handler)) {
+            $data = $handler($mapping, $element);
+        } else {
+            $data = $handler->handle($mapping, $element);
+        }
+
+
+        if ($this->isAssociativeArray($data)) {
+            return [$data];
+        }
+
         return $data;
     }
 }
