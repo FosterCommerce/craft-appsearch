@@ -1,6 +1,6 @@
 # Craft AppSearch
 
-![craft-appsearch](resources/hero.png)
+![craft-appsearch](resources/img/hero.png)
 
 Add AppSearch to your site.
 
