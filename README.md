@@ -1,4 +1,6 @@
-# appsearch plugin for Craft CMS 3.x
+# Craft AppSearch
+
+![craft-appsearch](resources/hero.png)
 
 Add AppSearch to your site.
 
